@@ -6,6 +6,9 @@ import com.shoukou.springsecuritywithjwt.user.UserRepository;
 import com.shoukou.springsecuritywithjwt.user.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,4 +77,23 @@ public class IndexController {
         return "redirect:/loginForm";
     }
 
+    /**
+     * SecurityConfig.@EnableGlobalMethodSecurity(securedEnabled = true)일 때,
+     * 메서드 레벨에서 ROLE ACCESS LEVEL 지정 가능
+     */
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/info")
+    public @ResponseBody String info() {
+        return "개인정보";
+    }
+
+    /**
+     * SecurityConfig.@EnableGlobalMethodSecurity(prePostEnabled = true)일 때,
+     * 메서드 레벨에서 ROLE ACCESS LEVEL 지정 가능
+     */
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+    @GetMapping("/data")
+    public @ResponseBody String data() {
+        return "데이터";
+    }
 }

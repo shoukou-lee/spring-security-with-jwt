@@ -5,10 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Setter
@@ -22,6 +19,8 @@ public class User {
     private String username;
     private String password;
     private String email;
+
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @CreationTimestamp
