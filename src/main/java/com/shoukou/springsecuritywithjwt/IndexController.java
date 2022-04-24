@@ -1,30 +1,22 @@
 package com.shoukou.springsecuritywithjwt;
 
-import com.shoukou.springsecuritywithjwt.user.User;
 import com.shoukou.springsecuritywithjwt.user.UserDto;
-import com.shoukou.springsecuritywithjwt.user.UserRepository;
-import com.shoukou.springsecuritywithjwt.user.UserRole;
+import com.shoukou.springsecuritywithjwt.user.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
+@RequiredArgsConstructor
 @Controller
 public class IndexController {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
+    private final UserService userService;
 
     @GetMapping("")
     public String index() {
@@ -58,21 +50,9 @@ public class IndexController {
 
     @PostMapping("/join")
     public String join(UserDto userDto) {
-
         log.info("dto.username : {}", userDto.getUsername());
 
-        User user = new User(userDto.getUsername(), userDto.getPassword(), userDto.getEmail());
-        user.setRole(UserRole.ROLE_USER);
-
-        /**
-        패스워드 encryption이 없으면 시큐리티 로그인이 불가능
-         WARN 8585 ---BCryptPasswordEncoder: Encoded password does not look like BCrypt
-         */
-        String rawPassword = userDto.getPassword();
-        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
-        user.setPassword(encPassword);
-
-        userRepository.save(user);
+        userService.join(userDto);
 
         return "redirect:/loginForm";
     }
