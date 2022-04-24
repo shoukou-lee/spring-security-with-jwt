@@ -10,7 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
- * /login 요청이 오면 자동으로 UserDatilsService 타입의 loadUserByUsername() 메서드가 실행됨
+ * Spring security 설정: /login 요청이 오면
+ * 자동으로 UserDatilsService 타입의 loadUserByUsername() 메서드가 실행됨
+ * 근데 formLogin -> disable이면 동작 안함
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class PrincipalDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        log.info("username: {} ", username);
+        log.info("로그인 요청 - username: {} ", username);
 
         User user = userRepository.findByUserName(username)
                 .orElseThrow(() -> new RuntimeException("UserNameNotFound"));

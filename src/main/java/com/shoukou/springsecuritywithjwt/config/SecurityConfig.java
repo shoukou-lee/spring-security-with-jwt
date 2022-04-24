@@ -2,6 +2,7 @@ package com.shoukou.springsecuritywithjwt.config;
 
 import com.shoukou.springsecuritywithjwt.filter.CustomFilter;
 import com.shoukou.springsecuritywithjwt.filter.CustomFilter3;
+import com.shoukou.springsecuritywithjwt.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,13 +43,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(corsFilter) // CorsConfig에서 등록한 Filter 빈을 추가, Security filter에 등록 인증 (CrossOrigin 인증 X)
                 .formLogin().disable() // 기존의 form Login을 더이상 쓰지 않을 것
                 .httpBasic().disable() // HTTP Basic 인증 방식 또한 안쓸 것 (Bearer 방식을 사용하기 위해)
+                .addFilter(new JwtAuthenticationFilter(authenticationManager())) // formLogin이 disable이므로, /login을 인터셉트하기 위한 필터 추가
                 .authorizeRequests()
                 .antMatchers("/api/v1/manager/**")
                 .access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/api/v1/admin/**")
                 .access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll();
-
     }
 
 }
