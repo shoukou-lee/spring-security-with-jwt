@@ -56,19 +56,20 @@ public class IndexController {
     @PostMapping("/join")
     public String join(UserDto userDto) {
 
-        log.info(userDto.getName());
+        log.info("dto.username : {}", userDto.getUsername());
 
-        User u = new User(userDto.getName(), userDto.getPassword(), userDto.getEmail());
-        u.setRole(UserRole.ROLE_USER);
+        User user = new User(userDto.getUsername(), userDto.getPassword(), userDto.getEmail());
+        user.setRole(UserRole.ROLE_USER);
 
         /**
         패스워드 encryption이 없으면 시큐리티 로그인이 불가능
+         WARN 8585 ---BCryptPasswordEncoder: Encoded password does not look like BCrypt
          */
         String rawPassword = userDto.getPassword();
-//        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
-//        userDto.setPassword(encPassword);
+        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+        user.setPassword(encPassword);
 
-        userRepository.save(u);
+        userRepository.save(user);
 
         return "redirect:/loginForm";
     }

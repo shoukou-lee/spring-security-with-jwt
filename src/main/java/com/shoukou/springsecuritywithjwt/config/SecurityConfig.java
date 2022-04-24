@@ -26,8 +26,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**").authenticated() // /user..는 인증 필요
                 .antMatchers("/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')") // 인증 및 권한 체크
                 .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')") // 인증 및 권한 체크
-                .anyRequest().permitAll()
-                .and().formLogin().loginPage("/loginForm");// 이에외는 모두 허용
+                .anyRequest().permitAll() // 이에외는 모두 허용
+                .and().formLogin().loginPage("/loginForm")
+                // .usernameParameter("somethingElseUserName) // loginForm의 username을 바꿀 때
+                .loginProcessingUrl("/login") // /login이 호출이 되면 security가 인터셉트 해서 대신 로그인
+                .defaultSuccessUrl("/"); // 로그인 성공 시 메인 페이지로 이동
     }
 
 }
