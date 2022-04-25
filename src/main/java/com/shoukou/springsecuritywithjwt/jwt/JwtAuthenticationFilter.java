@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         log.info("로그인 시도 중 .. ");
 
-        // TO-DO
+        //TODO
         // username, password 받아서 정상인지 authenticationManager로 로그인 시도를 해본다
         // 그러면 PrincipalDetailService.loadUserByUsername() 이 자동으로 실행된다.
         // 권한 관리를 위해 PrincipalDetails (UserDetail 확장 커스텀 클래스) 를 세션에 담고

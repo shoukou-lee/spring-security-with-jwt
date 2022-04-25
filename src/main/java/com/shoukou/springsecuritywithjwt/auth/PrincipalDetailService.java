@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 /**
  * Spring security 설정: /login 요청이 오면
  * 자동으로 UserDatilsService 타입의 loadUserByUsername() 메서드가 실행됨
- * 근데 formLogin -> disable이면 동작 안함
+ * 근데 formLogin=disable이면 동작 안하기 때문에 SecurityConfig에서 JwtAuthenticationFilter 필터를 추가했다.
  */
 @Slf4j
 @RequiredArgsConstructor
