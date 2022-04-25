@@ -1,6 +1,9 @@
 package com.shoukou.springsecuritywithjwt.auth;
 
 import com.shoukou.springsecuritywithjwt.user.User;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,6 +18,9 @@ import java.util.Collection;
  *
  * UserDetail로 User 객체 정보를 찾아내기 위한 클래스
  */
+@Getter
+@Setter
+@ToString
 public class PrincipalDetails implements UserDetails {
 
     private User user;
