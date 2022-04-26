@@ -1,5 +1,7 @@
 package com.shoukou.springsecuritywithjwt.jwt;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shoukou.springsecuritywithjwt.auth.PrincipalDetails;
 import com.shoukou.springsecuritywithjwt.user.UserDto;
@@ -16,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * /login 요청이 오면 인터셉트 하는 필터
@@ -67,12 +70,23 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     // attempAuthentication 실행 후 인증 성공하면 실행되는 메서드
-    // 여기서 JWT를 만들고 Requester에게 응답해줘도 됨
+    // 여기서 JWT를 만들고 Requester에게 응답해준다
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        log.info("인증 완료, JWT 생성 !");
 
-        log.info("인증 완료 !");
+        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
-        super.successfulAuthentication(request, response, chain, authResult);
+        // token 생성
+        String jwToken = JWT.create()
+                .withSubject("shoukou-token")
+                .withExpiresAt(new Date(System.currentTimeMillis() + (6 * 1000 * 10)))
+                // 넣고 싶은 key-value 를 withClaim() 에 넣는다
+                .withClaim("id", principalDetails.getUser().getId())
+                .withClaim("username", principalDetails.getUser().getUsername())
+                .sign(Algorithm.HMAC512("shoukou"));
+
+        // Postman으로 로그인 요청 후 Response header에서 JWT를 확인해보자
+        response.addHeader("Authorization", "Bearer " + jwToken);
     }
 }
