@@ -3,6 +3,8 @@ package com.shoukou.springsecuritywithjwt.config;
 import com.shoukou.springsecuritywithjwt.filter.CustomFilter;
 import com.shoukou.springsecuritywithjwt.filter.CustomFilter3;
 import com.shoukou.springsecuritywithjwt.jwt.JwtAuthenticationFilter;
+import com.shoukou.springsecuritywithjwt.jwt.JwtAuthorizationFilter;
+import com.shoukou.springsecuritywithjwt.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
 
+    private final UserRepository userRepository;
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -35,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // JWT 사용 위해 세션, 기존 form login, http 로그인 방식을 모두 안씀
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(new CustomFilter3(), SecurityContextPersistenceFilter.class);
+        // http.addFilterBefore(new CustomFilter3(), SecurityContextPersistenceFilter.class);
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 안하는 옵션
@@ -44,7 +48,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable() // 기존의 form Login을 더이상 쓰지 않을 것
                 .httpBasic().disable() // HTTP Basic 인증 방식 또한 안쓸 것 (Bearer 방식을 사용하기 위해)
                 .addFilter(new JwtAuthenticationFilter(authenticationManager())) // formLogin이 disable이므로, /login을 인터셉트하기 위한 필터 추가
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository)) // 권한 인증을 담당하는 필터
                 .authorizeRequests()
+                .antMatchers("/api/v1/user/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/api/v1/manager/**")
                 .access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/api/v1/admin/**")

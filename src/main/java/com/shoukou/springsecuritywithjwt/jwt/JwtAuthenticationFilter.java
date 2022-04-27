@@ -80,11 +80,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // token 생성
         String jwToken = JWT.create()
                 .withSubject("shoukou-token")
-                .withExpiresAt(new Date(System.currentTimeMillis() + (6 * 1000 * 10)))
+                .withExpiresAt(new Date(System.currentTimeMillis() + (6 * 1000 * 1000)))
                 // 넣고 싶은 key-value 를 withClaim() 에 넣는다
                 .withClaim("id", principalDetails.getUser().getId())
                 .withClaim("username", principalDetails.getUser().getUsername())
-                .sign(Algorithm.HMAC512("shoukou"));
+                .sign(Algorithm.HMAC512("shoukou-sign"));
 
         // Postman으로 로그인 요청 후 Response header에서 JWT를 확인해보자
         response.addHeader("Authorization", "Bearer " + jwToken);
