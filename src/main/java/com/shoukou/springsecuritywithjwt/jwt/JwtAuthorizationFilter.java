@@ -17,10 +17,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 //TODO
 // 권한 인증이 필요한 URL 요청은 BasicAuthenticationFilter를 거쳐야 함
+
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 

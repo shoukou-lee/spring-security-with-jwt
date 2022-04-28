@@ -19,6 +19,10 @@ public class RestApiController {
         return "<h1>home</h1>";
     }
 
+    @PostMapping("/reissue")
+    public String reissue() {
+        return "reissue";
+    }
 
     @GetMapping("/user/{userId}")
     public String getUser(@PathVariable Long userId) {

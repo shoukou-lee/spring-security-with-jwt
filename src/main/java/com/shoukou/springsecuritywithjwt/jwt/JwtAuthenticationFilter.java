@@ -77,6 +77,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
+
+
+
         // token 생성
         String jwToken = JWT.create()
                 .withSubject("shoukou-token")
