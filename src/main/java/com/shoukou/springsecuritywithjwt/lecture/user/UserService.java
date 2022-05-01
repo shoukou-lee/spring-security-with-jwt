@@ -1,4 +1,4 @@
-package com.shoukou.springsecuritywithjwt.user;
+package com.shoukou.springsecuritywithjwt.lecture.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

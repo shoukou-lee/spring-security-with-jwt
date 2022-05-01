@@ -1,4 +1,4 @@
-package com.shoukou.springsecuritywithjwt.user;
+package com.shoukou.springsecuritywithjwt.lecture.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

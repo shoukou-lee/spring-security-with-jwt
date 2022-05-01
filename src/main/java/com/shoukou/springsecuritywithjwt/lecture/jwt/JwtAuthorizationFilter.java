@@ -1,10 +1,10 @@
-package com.shoukou.springsecuritywithjwt.jwt;
+package com.shoukou.springsecuritywithjwt.lecture.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.shoukou.springsecuritywithjwt.auth.PrincipalDetails;
-import com.shoukou.springsecuritywithjwt.user.User;
-import com.shoukou.springsecuritywithjwt.user.UserRepository;
+import com.shoukou.springsecuritywithjwt.lecture.auth.PrincipalDetails;
+import com.shoukou.springsecuritywithjwt.lecture.user.User;
+import com.shoukou.springsecuritywithjwt.lecture.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

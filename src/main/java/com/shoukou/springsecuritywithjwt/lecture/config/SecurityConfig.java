@@ -1,10 +1,8 @@
-package com.shoukou.springsecuritywithjwt.config;
+package com.shoukou.springsecuritywithjwt.lecture.config;
 
-import com.shoukou.springsecuritywithjwt.filter.CustomFilter;
-import com.shoukou.springsecuritywithjwt.filter.CustomFilter3;
-import com.shoukou.springsecuritywithjwt.jwt.JwtAuthenticationFilter;
-import com.shoukou.springsecuritywithjwt.jwt.JwtAuthorizationFilter;
-import com.shoukou.springsecuritywithjwt.user.UserRepository;
+import com.shoukou.springsecuritywithjwt.lecture.jwt.JwtAuthenticationFilter;
+import com.shoukou.springsecuritywithjwt.lecture.jwt.JwtAuthorizationFilter;
+import com.shoukou.springsecuritywithjwt.lecture.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.web.filter.CorsFilter;
 
 /**

@@ -1,7 +1,7 @@
-package com.shoukou.springsecuritywithjwt.auth;
+package com.shoukou.springsecuritywithjwt.lecture.auth;
 
-import com.shoukou.springsecuritywithjwt.user.User;
-import com.shoukou.springsecuritywithjwt.user.UserRepository;
+import com.shoukou.springsecuritywithjwt.lecture.user.User;
+import com.shoukou.springsecuritywithjwt.lecture.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

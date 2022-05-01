@@ -1,7 +1,7 @@
-package com.shoukou.springsecuritywithjwt;
+package com.shoukou.springsecuritywithjwt.lecture.controller;
 
-import com.shoukou.springsecuritywithjwt.user.UserDto;
-import com.shoukou.springsecuritywithjwt.user.UserService;
+import com.shoukou.springsecuritywithjwt.lecture.user.UserDto;
+import com.shoukou.springsecuritywithjwt.lecture.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

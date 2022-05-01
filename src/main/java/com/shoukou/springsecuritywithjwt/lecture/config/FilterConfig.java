@@ -1,7 +1,7 @@
-package com.shoukou.springsecuritywithjwt.config;
+package com.shoukou.springsecuritywithjwt.lecture.config;
 
-import com.shoukou.springsecuritywithjwt.filter.CustomFilter;
-import com.shoukou.springsecuritywithjwt.filter.CustomFilter2;
+import com.shoukou.springsecuritywithjwt.lecture.filter.CustomFilter;
+import com.shoukou.springsecuritywithjwt.lecture.filter.CustomFilter2;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

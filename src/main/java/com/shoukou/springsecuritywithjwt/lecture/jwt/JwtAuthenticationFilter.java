@@ -1,10 +1,10 @@
-package com.shoukou.springsecuritywithjwt.jwt;
+package com.shoukou.springsecuritywithjwt.lecture.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shoukou.springsecuritywithjwt.auth.PrincipalDetails;
-import com.shoukou.springsecuritywithjwt.user.UserDto;
+import com.shoukou.springsecuritywithjwt.lecture.auth.PrincipalDetails;
+import com.shoukou.springsecuritywithjwt.lecture.user.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -76,9 +76,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("인증 완료, JWT 생성 !");
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
-
-
-
 
         // token 생성
         String jwToken = JWT.create()

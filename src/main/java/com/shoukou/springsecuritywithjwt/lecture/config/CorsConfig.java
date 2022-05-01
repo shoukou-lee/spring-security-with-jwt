@@ -1,4 +1,4 @@
-package com.shoukou.springsecuritywithjwt.config;
+package com.shoukou.springsecuritywithjwt.lecture.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

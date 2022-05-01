@@ -28,6 +28,9 @@ spring:
       hibernate:
         format_sql: true
 
+  profiles:
+    active: secret
+
 logging:
   level:
     root: info

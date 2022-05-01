@@ -1,6 +1,6 @@
-package com.shoukou.springsecuritywithjwt.auth;
+package com.shoukou.springsecuritywithjwt.lecture.auth;
 
-import com.shoukou.springsecuritywithjwt.user.User;
+import com.shoukou.springsecuritywithjwt.lecture.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
