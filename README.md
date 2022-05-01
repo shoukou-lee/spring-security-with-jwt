@@ -1,6 +1,6 @@
 ### Spring Security & JWT 강의를 듣고, 처음부터 스스로 만들어봅니다.
-- 강의를 참고한 구현은 lecture 브랜치에 위치합니다. Java-JWT 라이브러리를 사용합니다.
-- 스스로 해볼 구현은 강의와 약간 다를 것이고, jjwt 라이브러리를 사용합니다.  
+- 강의를 참고한 구현은 lecture 브랜치에 위치합니다. [Java-JWT](https://github.com/auth0/java-jwt) 라이브러리를 사용합니다.
+- 스스로 해볼 구현은 강의와 약간 다를 것이고, [jjwt](https://github.com/jwtk/jjwt) 라이브러리를 사용합니다.  
 
 
 ### reffered to : 

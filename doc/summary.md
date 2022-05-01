@@ -49,4 +49,4 @@
   - 예를 들면, loadUserByUsername은 사용자 이름으로 User detail을 불러온다.
 
 ## Authentication Using JWT with Spring Security
-![img_1.png](img_1.png)
+![img_3.png](datapath.png)
