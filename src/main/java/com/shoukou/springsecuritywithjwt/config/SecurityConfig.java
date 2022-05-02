@@ -16,11 +16,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${jwt.secret}")
-    private String secret;
+
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider; // AuthenticationProvider의 커스텀 구현체
-    private final AuthenticationManager authenticationManager; // 기본 구현체 = ProviderManager이며, 생성자 인자로 Provider가 필요
+    private final AuthenticationManager authenticationManager; // 기본 구현체는 ProviderManager이며, 생성자 인자로 Provider가 필요
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
