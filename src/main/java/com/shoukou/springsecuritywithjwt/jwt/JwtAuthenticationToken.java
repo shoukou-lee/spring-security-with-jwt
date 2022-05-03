@@ -12,6 +12,11 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private Object principal;
     private Object credentials;
 
+    public JwtAuthenticationToken(String jwt) {
+        super(null);
+        this.jwt = jwt;
+    }
+
     /**
      * Creates a token with the supplied array of authorities.
      *
@@ -26,14 +31,12 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
     @Override
     public Object getCredentials() {
-        //TODO : 실제 구현 필요
-        return null;
+        return this.credentials;
     }
 
     @Override
     public Object getPrincipal() {
-        //TODO : 실제 구현 필요
-        return null;
+        return this.principal;
     }
 
     public String getJwt() {
