@@ -1,6 +1,7 @@
 package com.shoukou.springsecuritywithjwt.jwt;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ import java.io.IOException;
     lecture의 JwtAuthorizationFilter 참고
  */
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -38,6 +40,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         Authentication jwtAuthenticationToken = new JwtAuthenticationToken(jwt);
         Authentication authenticate = authenticationManager.authenticate(jwtAuthenticationToken);
+
+        log.info("JWT 받아와서 SecurityContextHolder에 넣자 ! ");
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
         filterChain.doFilter(request, response); // invoke next filter in the filter chain

@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,26 +19,23 @@ import java.util.List;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    private final byte[] secretKeyByte;
     private final String secret;
 
     public JwtAuthenticationProvider(@Value("${jwt.secret}") String secret) {
-
         this.secret = secret;
-        this.secretKeyByte = secret.getBytes();
     }
 
     public Collection<? extends GrantedAuthority> createGrantedAuthority(Claims claims) {
-        // 클레임에서 Key가 role인 Value들을 꺼내온다.
+        // private claim에서 Key가 role인 Value를 꺼내온다.
+        //TODO
         // AbstractAuthenticationToken 생성자 인자로 Collection<?...> 가 필요하다 ... Multiple-role을 고려한 듯
+        // 나는 single-role만 필요한데, 우선 String -> GrantedAuthority -> Arrays.asList(..)로 변환하자 ..
+        // 나중에 Token 생성자 인자를 수정하는게 좋을지도 ..
 
-        List<String> roles = (List) claims.get("roles");
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        String role = (String) claims.get("role");
+        GrantedAuthority grantedAuthority = () -> role;
 
-        for (String role : roles) {
-            GrantedAuthority grantedAuthority = () -> role; // 람다식 축약 형태, new GrantedAuthority() {@Override getAuthority} 를 의미
-            grantedAuthorities.add(grantedAuthority);
-        }
+        List<GrantedAuthority> grantedAuthorities = Arrays.asList(grantedAuthority);
 
         return grantedAuthorities;
     }
@@ -52,14 +50,19 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKeyByte)
+                .setSigningKey(secret.getBytes())
                 .build()
                 .parseClaimsJws(token.getJwt())
                 .getBody();
 
         String subject = claims.getSubject();
         String credentials = "";
+
+        log.info("subject : {}, credentials : {}", subject, credentials);
+
         Collection<? extends GrantedAuthority> grantedAuthorities = createGrantedAuthority(claims);
+
+        log.info("인증 끝 !");
 
         return new JwtAuthenticationToken(subject, credentials, grantedAuthorities);
     }
