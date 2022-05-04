@@ -2,6 +2,7 @@ package com.shoukou.springsecuritywithjwt.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -13,12 +14,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private final byte[] secretKeyByte;
+    private final String secret;
 
     public JwtAuthenticationProvider(@Value("${jwt.secret}") String secret) {
+
+        this.secret = secret;
         this.secretKeyByte = secret.getBytes();
     }
 
@@ -42,6 +47,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         // 받아온 JWT가 유효한지 검증하는 로직 구현
         // 검증 중 Exception이 발생하면 상위로 Throw 한다.
         // ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException
+
+        log.info("secret:{}", secret);
 
         JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
         Claims claims = Jwts.parserBuilder()
