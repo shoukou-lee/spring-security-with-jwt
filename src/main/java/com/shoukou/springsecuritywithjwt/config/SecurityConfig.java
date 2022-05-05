@@ -31,7 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll();
 
         //TODO
-        // 우선 JwtAuthenticationFilter에서 RuntimeException이 나오는것까진 확인했다
         // Security filter chain 구조 그림 보면 LogoutFilter 이후에 JWTFilter가 오는게 맞아 보이는데, 확실한가 .. ?
 
         // http.addFilter(new JwtAuthenticationFilter(authenticationManager));
