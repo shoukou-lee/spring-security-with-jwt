@@ -10,7 +10,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -19,10 +18,10 @@ import java.util.List;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    private final String secret;
+    private final String secretKey;
 
-    public JwtAuthenticationProvider(@Value("${jwt.secret}") String secret) {
-        this.secret = secret;
+    public JwtAuthenticationProvider(@Value("${jwt.secret.key}") String secretKey) {
+        this.secretKey = secretKey;
     }
 
     public Collection<? extends GrantedAuthority> createGrantedAuthority(Claims claims) {
@@ -46,11 +45,11 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         // 검증 중 Exception이 발생하면 상위로 Throw 한다.
         // ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException
 
-        log.info("secret:{}", secret);
+        log.info("secret:{}", secretKey);
 
         JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes())
+                .setSigningKey(secretKey.getBytes())
                 .build()
                 .parseClaimsJws(token.getJwt())
                 .getBody();
