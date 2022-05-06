@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @RequiredArgsConstructor
@@ -25,10 +26,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/users/**").hasAnyRole("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
-                .antMatchers("/manager/**").hasAnyRole("ROLE_MANAGER", "ROLE_ADMIN")
-                .antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN")
-                .anyRequest().permitAll();
+//                .antMatchers("/users/**").hasAnyRole("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
+//                .antMatchers("/manager/**").hasAnyRole("ROLE_MANAGER", "ROLE_ADMIN")
+//                .antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN")
+                .anyRequest().permitAll()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         //TODO
         // Security filter chain 구조 그림 보면 LogoutFilter 이후에 JWTFilter가 오는게 맞아 보이는데, 확실한가 .. ?

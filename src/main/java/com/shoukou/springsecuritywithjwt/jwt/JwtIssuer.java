@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.Collections;
 import java.util.Date;
 
 @Component
@@ -30,7 +29,7 @@ public class JwtIssuer {
         this.refreshExpirationTimeInMinute = refreshExpirationTimeInMinute;
     }
 
-    public String createToken(String username, String authority) {
+    public String createAccessToken(String username, String authority) {
         return createToken(username, authority, this.secretKey, this.expirationTimeInMinute);
     }
 
@@ -38,7 +37,7 @@ public class JwtIssuer {
         return createToken(username, authority, this.refreshKey, this.refreshExpirationTimeInMinute);
     }
 
-    public String createToken(String username, String authority, String key, int expiration) {
+    private String createToken(String username, String authority, String key, int expiration) {
 
         Claims claims = Jwts.claims();
         claims.setSubject(username);
