@@ -26,18 +26,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
-//                .antMatchers("/users/**").hasAnyRole("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
-//                .antMatchers("/manager/**").hasAnyRole("ROLE_MANAGER", "ROLE_ADMIN")
-//                .antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN")
+                .antMatchers("/user/**").hasAnyRole("ROLE_USER", "ROLE_MANAGER", "ROLE_ADMIN")
+                .antMatchers("/manager/**").hasAnyRole("ROLE_MANAGER", "ROLE_ADMIN")
+                .antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        //TODO
-        // Security filter chain 구조 그림 보면 LogoutFilter 이후에 JWTFilter가 오는게 맞아 보이는데, 확실한가 .. ?
-
-        // http.addFilter(new JwtAuthenticationFilter(authenticationManager));
+        //TODO : /auth에 대해 permitAll()을 했으니 auth 필터를 통과하지 않을 줄 알았는데 토큰검증 예외가 터진다..
+        // 참고할만한 비슷한 상황이 마침 있다 ..
+        // https://stackoverflow.com/questions/46068433/spring-security-with-filters-permitall-not-working
 
         AuthenticationManager authManager = authenticationManager();
         http.addFilterAfter(new JwtAuthenticationFilter(authManager), LogoutFilter.class);

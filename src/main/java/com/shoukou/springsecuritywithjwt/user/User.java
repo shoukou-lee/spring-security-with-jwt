@@ -20,6 +20,8 @@ public class User {
 
     private String phoneNumber;
 
+    private Boolean isDeleted;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -27,6 +29,12 @@ public class User {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.role = UserRole.ROLE_USER;
+        this.isDeleted = false;
     }
 
+    public User softDelete() {
+        this.isDeleted = true;
+        return this;
+    }
 }

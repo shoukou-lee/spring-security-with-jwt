@@ -42,6 +42,7 @@ public class JwtIssuer {
         Claims claims = Jwts.claims();
         claims.setSubject(username);
         claims.put(ROLE, authority);
+        //TODO : put private claims
 
         Date now = new Date();
         Date expiredAt = new Date(now.getTime() + minuteToMillisecond(expiration));

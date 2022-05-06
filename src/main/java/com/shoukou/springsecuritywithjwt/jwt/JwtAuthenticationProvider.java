@@ -61,8 +61,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         Collection<? extends GrantedAuthority> grantedAuthorities = createGrantedAuthority(claims);
 
-        log.info("인증 끝 !");
-
+        log.info("인증된 토큰 발급 !");
         return new JwtAuthenticationToken(subject, credentials, grantedAuthorities);
     }
 

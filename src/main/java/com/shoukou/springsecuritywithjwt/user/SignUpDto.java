@@ -7,6 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 @Getter
-public class LoginDto {
-    private String username;
+public class SignUpDto {
+    private String name;
+    private String email;
+    private String phoneNumber;
 }

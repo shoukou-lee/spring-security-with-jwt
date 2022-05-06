@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Builder
 @Getter
-public class LoginDto {
-    private String username;
+public class UserListDto {
+    private List<UserDto> userDtos;
 }

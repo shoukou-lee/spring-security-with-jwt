@@ -1,29 +1,30 @@
 package com.shoukou.springsecuritywithjwt.user;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
-    @GetMapping("/auth")
-    public String auth() {
-        return "auth";
+    private final UserService userService;
+
+    @GetMapping("")
+    public UserListDto getUserList() {
+        return userService.getUserList();
     }
 
-    @GetMapping("/user")
-    public String user() {
-        return "user";
+    @GetMapping("/mydetail")
+    public UserDto getMyDetail() {
+        return userService.getMyDetail();
     }
 
-    @GetMapping("/manager")
-    public String manager() {
-        return "manager";
-    }
-
-    @GetMapping("/admin")
-    public String admin() {
-        return "admin";
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PostMapping("/ban/{userId}")
+    public UserDto ban(@PathVariable Long userId) {
+        return userService.ban(userId);
     }
 
 }
