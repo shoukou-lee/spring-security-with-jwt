@@ -13,7 +13,10 @@ import java.util.Date;
 @Component
 public class JwtIssuer {
 
-    private final String ROLE = "role";
+    private final String USER_ID = "id";
+    private final String USER_NAME = "uname";
+    private final String USER_ROLE = "role";
+
     private final String secretKey;
     private final String refreshKey;
     private final int expirationTimeInMinute;
@@ -29,20 +32,20 @@ public class JwtIssuer {
         this.refreshExpirationTimeInMinute = refreshExpirationTimeInMinute;
     }
 
-    public String createAccessToken(String username, String authority) {
-        return createToken(username, authority, this.secretKey, this.expirationTimeInMinute);
+    public String createAccessToken(Long userId, String username, String authority) {
+        return createToken(userId, username, authority, this.secretKey, this.expirationTimeInMinute);
     }
 
-    public String createRefreshToken(String username, String authority) {
-        return createToken(username, authority, this.refreshKey, this.refreshExpirationTimeInMinute);
+    public String createRefreshToken(Long userId, String username, String authority) {
+        return createToken(userId, username, authority, this.refreshKey, this.refreshExpirationTimeInMinute);
     }
 
-    private String createToken(String username, String authority, String key, int expiration) {
+    private String createToken(Long userId, String username, String authority, String key, int expiration) {
 
         Claims claims = Jwts.claims();
-        claims.setSubject(username);
-        claims.put(ROLE, authority);
-        //TODO : put private claims
+        claims.setSubject(userId.toString()); // subject로는 userId를 사용
+        claims.put(USER_NAME, username); // 원하는 private claims를 put
+        claims.put(USER_ROLE, authority); // 원하는 private claims를 put
 
         Date now = new Date();
         Date expiredAt = new Date(now.getTime() + minuteToMillisecond(expiration));

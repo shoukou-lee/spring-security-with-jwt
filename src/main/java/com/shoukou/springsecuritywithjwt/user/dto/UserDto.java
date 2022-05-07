@@ -1,9 +1,12 @@
-package com.shoukou.springsecuritywithjwt.user;
+package com.shoukou.springsecuritywithjwt.user.dto;
 
+import com.shoukou.springsecuritywithjwt.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter

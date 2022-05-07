@@ -33,9 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        //TODO : /auth에 대해 permitAll()을 했으니 auth 필터를 통과하지 않을 줄 알았는데 토큰검증 예외가 터진다..
-        // 참고할만한 비슷한 상황이 마침 있다 ..
-        // https://stackoverflow.com/questions/46068433/spring-security-with-filters-permitall-not-working
 
         AuthenticationManager authManager = authenticationManager();
         http.addFilterAfter(new JwtAuthenticationFilter(authManager), LogoutFilter.class);

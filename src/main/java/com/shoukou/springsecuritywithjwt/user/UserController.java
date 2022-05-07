@@ -1,5 +1,7 @@
 package com.shoukou.springsecuritywithjwt.user;
 
+import com.shoukou.springsecuritywithjwt.user.dto.UserDto;
+import com.shoukou.springsecuritywithjwt.user.dto.UserListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +18,9 @@ public class UserController {
         return userService.getUserList();
     }
 
-    @GetMapping("/mydetail")
-    public UserDto getMyDetail() {
-        return userService.getMyDetail();
+    @GetMapping("/myinfo")
+    public UserDto getMyInfo() {
+        return userService.getMyInfo();
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")

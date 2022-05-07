@@ -1,8 +1,8 @@
 package com.shoukou.springsecuritywithjwt.auth;
 
 import com.shoukou.springsecuritywithjwt.jwt.JwtDto;
-import com.shoukou.springsecuritywithjwt.user.LoginDto;
-import com.shoukou.springsecuritywithjwt.user.SignUpDto;
+import com.shoukou.springsecuritywithjwt.user.dto.LoginDto;
+import com.shoukou.springsecuritywithjwt.user.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

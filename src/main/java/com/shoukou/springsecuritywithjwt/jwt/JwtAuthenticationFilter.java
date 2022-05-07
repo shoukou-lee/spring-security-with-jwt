@@ -34,6 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     /**
      * 로그인/회원가입 요청은 헤더의 Authorization에 맞는 토큰이 없더라도 Auth-filtered 되지 않아야 함
      * parseHeader에서 토큰이 없다고 무작정 Exception을 터뜨리지 않고, null을 리턴한 뒤 다음 필터를 타게 하자
+     * https://stackoverflow.com/questions/46068433/spring-security-with-filters-permitall-not-working
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
