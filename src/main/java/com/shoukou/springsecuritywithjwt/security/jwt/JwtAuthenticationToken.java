@@ -29,8 +29,9 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     // 인증된 토큰 발급
-    public JwtAuthenticationToken(Collection<? extends GrantedAuthority> authorities, Object principal, Object credentials, String issuer, String userId, String username) {
+    public JwtAuthenticationToken(String jwt, Collection<? extends GrantedAuthority> authorities, Object principal, Object credentials, String issuer, String userId, String username) {
         super(authorities);
+        this.jwt = jwt;
         this.principal = principal;
         this.credentials = credentials;
         this.issuer = issuer;

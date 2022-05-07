@@ -1,11 +1,13 @@
 package com.shoukou.springsecuritywithjwt.security.jwt;
 
-import lombok.RequiredArgsConstructor;
+import com.shoukou.springsecuritywithjwt.redis.RedisAccessTokenService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -23,13 +25,18 @@ import java.io.IOException;
  */
 
 @Slf4j
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final String AUTHORIZATION = "Authorization";
     private final String BEARER = "Bearer ";
 
     private final AuthenticationManager authenticationManager;
+    private final RedisAccessTokenService redisAccessTokenService;
+
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, RedisAccessTokenService redisAccessTokenService) {
+        this.authenticationManager = authenticationManager;
+        this.redisAccessTokenService = redisAccessTokenService;
+    }
 
     /**
      * 로그인/회원가입 요청은 헤더의 Authorization에 맞는 토큰이 없더라도 Auth-filtered 되지 않아야 함
@@ -43,6 +50,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 상위 메서드로 올린다면 어디에서 처리되는건지 ...
 
         String jwt = parseHeader(request);
+
+        // 로그아웃된 사용자의 토큰인데 요청이 들어오는 경우를 확인
+        if (redisAccessTokenService.exists(jwt)) {
+            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "This token has already been logged out and is no longer valid. ");
+        }
 
         if (jwt != null) {
             try {

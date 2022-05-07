@@ -1,5 +1,6 @@
 package com.shoukou.springsecuritywithjwt.auth;
 
+import com.shoukou.springsecuritywithjwt.redis.RedisAccessTokenService;
 import com.shoukou.springsecuritywithjwt.redis.RedisRefreshTokenService;
 import com.shoukou.springsecuritywithjwt.security.jwt.*;
 import com.shoukou.springsecuritywithjwt.user.User;
@@ -7,16 +8,20 @@ import com.shoukou.springsecuritywithjwt.user.UserRepository;
 import com.shoukou.springsecuritywithjwt.user.dto.LoginDto;
 import com.shoukou.springsecuritywithjwt.user.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class AuthService {
 
+    private final RedisAccessTokenService redisAccessTokenService;
     private final RedisRefreshTokenService redisRefreshTokenService;
     private final UserRepository userRepository;
     private final JwtIssuer jwtIssuer;
@@ -31,8 +36,14 @@ public class AuthService {
     }
 
     public void logout() {
+        String token = JwtPrivateClaimExtractor.getToken();
         Long userId = JwtPrivateClaimExtractor.getUserId();
         redisRefreshTokenService.deleteRefreshToken(userId);
+        SecurityContextHolder.clearContext();
+
+        redisAccessTokenService.put(token); // 블랙리스트에 올려두기
+
+        log.info("로그아웃 완료 !");
     }
 
     /**

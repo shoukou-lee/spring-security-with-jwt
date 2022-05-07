@@ -23,9 +23,9 @@ public class JwtIssuer {
     private final int expirationTimeInMinute;
     private final int refreshExpirationTimeInMinute;
 
-    public JwtIssuer(@Value("${jwt.secret.key}") String secretKey,
+    public JwtIssuer(@Value("${jwt.access.key}") String secretKey,
                      @Value("${jwt.refresh.key}") String refreshKey,
-                     @Value("${jwt.secret.expiration}") int expirationTimeInMinute,
+                     @Value("${jwt.access.expiration}") int expirationTimeInMinute,
                      @Value("${jwt.refresh.expiration}") int refreshExpirationTimeInMinute) {
         this.secretKey = secretKey;
         this.refreshKey = refreshKey;

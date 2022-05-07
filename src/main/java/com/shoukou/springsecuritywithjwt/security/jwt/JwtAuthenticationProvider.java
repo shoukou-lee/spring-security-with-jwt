@@ -21,7 +21,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private final String secretKey;
 
-    public JwtAuthenticationProvider(@Value("${jwt.secret.key}") String secretKey) {
+    public JwtAuthenticationProvider(@Value("${jwt.access.key}") String secretKey) {
         this.secretKey = secretKey;
     }
 
@@ -57,7 +57,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         Collection<? extends GrantedAuthority> grantedAuthorities = createGrantedAuthority(claims);
 
         log.info("인증된 토큰 발급 !");
-        return new JwtAuthenticationToken(grantedAuthorities, subject, credentials, issuer, userId, username);
+        return new JwtAuthenticationToken(token.getJwt(), grantedAuthorities, subject, credentials, issuer, userId, username);
     }
 
     @Override
