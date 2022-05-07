@@ -7,12 +7,13 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtIssuer {
 
+    // custom private claims
     private final String USER_ID = "id";
     private final String USER_NAME = "uname";
     private final String USER_ROLE = "role";
@@ -43,17 +44,19 @@ public class JwtIssuer {
     private String createToken(Long userId, String username, String authority, String key, int expiration) {
 
         Claims claims = Jwts.claims();
-        claims.setSubject(userId.toString()); // subject로는 userId를 사용
+        claims.put(USER_ID, userId.toString());
         claims.put(USER_NAME, username); // 원하는 private claims를 put
         claims.put(USER_ROLE, authority); // 원하는 private claims를 put
 
         Date now = new Date();
         Date expiredAt = new Date(now.getTime() + minuteToMillisecond(expiration));
 
-        SecretKey secretKey = Keys.hmacShaKeyFor(key.getBytes());
+        Key secretKey = Keys.hmacShaKeyFor(key.getBytes());
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setSubject(key.equals(secretKey) ? "ACCESS" : "REFRESH")
+                .setIssuer("SHOUKOU")
                 .setIssuedAt(now)
                 .setExpiration(expiredAt)
                 .signWith(secretKey, SignatureAlgorithm.HS256)

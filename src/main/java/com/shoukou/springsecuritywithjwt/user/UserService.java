@@ -1,6 +1,6 @@
 package com.shoukou.springsecuritywithjwt.user;
 
-import com.shoukou.springsecuritywithjwt.security.jwt.JwtPrincipalExtractor;
+import com.shoukou.springsecuritywithjwt.security.jwt.JwtPrivateClaimExtractor;
 import com.shoukou.springsecuritywithjwt.user.dto.UserDto;
 import com.shoukou.springsecuritywithjwt.user.dto.UserListDto;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class UserService {
 
     public UserDto getMyInfo() {
 
-        Long myId = JwtPrincipalExtractor.getUserId();
+        Long myId = JwtPrivateClaimExtractor.getUserId();
         User user = userRepository.findById(myId)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "No user found"));
 
@@ -45,7 +45,7 @@ public class UserService {
     @Transactional
     public UserDto ban(Long targetUserId) {
 
-        Long requesterId = JwtPrincipalExtractor.getUserId();
+        Long requesterId = JwtPrivateClaimExtractor.getUserId();
 
         User requester = userRepository.findById(requesterId)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "No user found"));

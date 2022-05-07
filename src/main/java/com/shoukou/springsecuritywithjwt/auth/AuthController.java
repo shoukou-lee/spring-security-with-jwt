@@ -1,10 +1,10 @@
 package com.shoukou.springsecuritywithjwt.auth;
 
 import com.shoukou.springsecuritywithjwt.security.jwt.JwtDto;
+import com.shoukou.springsecuritywithjwt.security.jwt.JwtReissueDto;
 import com.shoukou.springsecuritywithjwt.user.dto.LoginDto;
 import com.shoukou.springsecuritywithjwt.user.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -27,6 +27,11 @@ public class AuthController {
     @PostMapping("/signup")
     public JwtDto signUp(@RequestBody SignUpDto signUpDto) {
         return authService.signUp(signUpDto);
+    }
+
+    @PostMapping("/reissue")
+    public JwtDto reissue(@RequestBody JwtReissueDto jwtReissueDtoDto) {
+        return authService.reissue(jwtReissueDtoDto);
     }
 
 }

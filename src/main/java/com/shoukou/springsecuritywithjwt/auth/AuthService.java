@@ -1,12 +1,11 @@
 package com.shoukou.springsecuritywithjwt.auth;
 
-import com.shoukou.springsecuritywithjwt.redis.RedisService;
-import com.shoukou.springsecuritywithjwt.security.jwt.JwtDto;
-import com.shoukou.springsecuritywithjwt.security.jwt.JwtIssuer;
-import com.shoukou.springsecuritywithjwt.user.dto.LoginDto;
-import com.shoukou.springsecuritywithjwt.user.dto.SignUpDto;
+import com.shoukou.springsecuritywithjwt.redis.RedisRefreshTokenService;
+import com.shoukou.springsecuritywithjwt.security.jwt.*;
 import com.shoukou.springsecuritywithjwt.user.User;
 import com.shoukou.springsecuritywithjwt.user.UserRepository;
+import com.shoukou.springsecuritywithjwt.user.dto.LoginDto;
+import com.shoukou.springsecuritywithjwt.user.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,10 @@ import org.springframework.web.client.HttpClientErrorException;
 @Transactional(readOnly = true)
 public class AuthService {
 
-    private final RedisService redisService;
+    private final RedisRefreshTokenService redisRefreshTokenService;
     private final UserRepository userRepository;
     private final JwtIssuer jwtIssuer;
+    private final JwtAuthenticationProvider provider;
 
     public JwtDto login(LoginDto loginDto) {
 
@@ -31,7 +31,36 @@ public class AuthService {
     }
 
     public void logout() {
-        // TODO : 레디스 RefreshToken 삭제
+        Long userId = JwtPrivateClaimExtractor.getUserId();
+        redisRefreshTokenService.deleteRefreshToken(userId);
+    }
+
+    /**
+     * https://stackoverflow.com/questions/32060478/is-a-refresh-token-really-necessary-when-using-jwt-token-authentication
+     * - 고민해볼 점들 -
+     * 각 유저에 대해 Access-Refresh token pair을 저장한다.
+     * 공격자가 Refresh 토큰을 탈취해 새 Access token을 발급 받았다고 하자.
+     * 서버에서는 Access token이 만료되지 않았는데, 재발급 요청이 있는 경우 탈취라고 판단하고 만료시킨다.
+     * 정상 유저와 공격자 모두 토큰이 만료되어 재발급 받아야 한다.
+     */
+    public JwtDto reissue(JwtReissueDto jwtReissueDto) {
+
+        Long userIdInToken = provider.getUserIdFromClaim(jwtReissueDto.getAccessToken());
+        String refreshTokenInRedis = redisRefreshTokenService.getRefreshToken(userIdInToken);
+
+        if (refreshTokenInRedis.equals(jwtReissueDto.getRefreshToken())) {
+            // 새 토큰 발급
+            User user = userRepository.findById(userIdInToken)
+                    .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "User not found"));
+
+            JwtDto jwt = createJwt(user);
+
+            redisRefreshTokenService.updateRefreshToken(user.getId(), jwt.getRefreshToken());
+
+            return jwt;
+        }
+
+        throw new RuntimeException("Invalid Refresh token");
     }
 
     @Transactional
@@ -64,7 +93,7 @@ public class AuthService {
         String accessToken = jwtIssuer.createAccessToken(user.getId(), user.getName(), user.getRole().toString());
         String refreshToken = jwtIssuer.createRefreshToken(user.getId(), user.getName(), user.getRole().toString());
 
-        redisService.saveRefreshToken(refreshToken, user.getId());
+        redisRefreshTokenService.saveRefreshToken(user.getId(), refreshToken);
 
         return JwtDto.builder()
                 .accessToken(accessToken)
@@ -72,5 +101,6 @@ public class AuthService {
                 .grantType("Bearer")
                 .build();
     }
+
 
 }

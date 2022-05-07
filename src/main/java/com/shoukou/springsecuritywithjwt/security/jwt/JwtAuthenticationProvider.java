@@ -1,6 +1,7 @@
 package com.shoukou.springsecuritywithjwt.security.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,11 +27,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     public Collection<? extends GrantedAuthority> createGrantedAuthority(Claims claims) {
         // private claim에서 Key가 role인 Value를 꺼내온다.
-        //TODO
-        // AbstractAuthenticationToken 생성자 인자로 Collection<?...> 가 필요하다 ... Multiple-role을 고려한 듯
-        // 나는 single-role만 필요한데, 우선 String -> GrantedAuthority -> Arrays.asList(..)로 변환하자 ..
-        // 나중에 Token 생성자 인자를 수정하는게 좋을지도 ..
-
         String role = (String) claims.get("role");
         GrantedAuthority grantedAuthority = () -> role;
 
@@ -48,13 +44,12 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         log.info("secret:{}", secretKey);
 
         JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey.getBytes())
-                .build()
-                .parseClaimsJws(token.getJwt())
-                .getBody();
+        Claims claims = parseJwt(token.getJwt());
 
         String subject = claims.getSubject();
+        String userId = claims.get("id", String.class);
+        String username = claims.get("uname", String.class);
+        String issuer = claims.getIssuer();
         String credentials = "";
 
         log.info("subject : {}, credentials : {}", subject, credentials);
@@ -62,7 +57,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         Collection<? extends GrantedAuthority> grantedAuthorities = createGrantedAuthority(claims);
 
         log.info("인증된 토큰 발급 !");
-        return new JwtAuthenticationToken(subject, credentials, grantedAuthorities);
+        return new JwtAuthenticationToken(grantedAuthorities, subject, credentials, issuer, userId, username);
     }
 
     @Override
@@ -71,4 +66,23 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         return JwtAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
+    public Long getUserIdFromClaim(String jwt) {
+        try {
+            Claims claims = parseJwt(jwt);
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 토큰에서 get id");
+            String id = e.getClaims().get("id", String.class);
+            return Long.valueOf(id);
+        }
+        log.info("만료 안된 토큰 ㅠㅠ");
+        return null;
+    }
+
+    private Claims parseJwt(String jwt) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey.getBytes())
+                .build()
+                .parseClaimsJws(jwt)
+                .getBody();
+    }
 }
