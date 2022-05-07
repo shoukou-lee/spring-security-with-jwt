@@ -1,4 +1,4 @@
-package com.shoukou.springsecuritywithjwt.jwt;
+package com.shoukou.springsecuritywithjwt.security.jwt;
 
 import lombok.Builder;
 import lombok.Getter;

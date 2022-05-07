@@ -1,13 +1,11 @@
 package com.shoukou.springsecuritywithjwt.auth;
 
-import com.shoukou.springsecuritywithjwt.jwt.JwtDto;
+import com.shoukou.springsecuritywithjwt.security.jwt.JwtDto;
 import com.shoukou.springsecuritywithjwt.user.dto.LoginDto;
 import com.shoukou.springsecuritywithjwt.user.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,6 +17,11 @@ public class AuthController {
     @PostMapping("/login")
     public JwtDto login(@RequestBody LoginDto loginDto) {
         return authService.login(loginDto);
+    }
+
+    @GetMapping("/logout")
+    public void logout() {
+        authService.logout();
     }
 
     @PostMapping("/signup")

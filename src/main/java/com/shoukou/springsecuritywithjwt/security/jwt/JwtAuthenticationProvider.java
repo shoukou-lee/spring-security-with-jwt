@@ -1,4 +1,4 @@
-package com.shoukou.springsecuritywithjwt.jwt;
+package com.shoukou.springsecuritywithjwt.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

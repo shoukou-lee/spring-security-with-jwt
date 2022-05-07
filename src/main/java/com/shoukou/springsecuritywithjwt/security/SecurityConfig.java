@@ -1,7 +1,7 @@
-package com.shoukou.springsecuritywithjwt.config;
+package com.shoukou.springsecuritywithjwt.security;
 
-import com.shoukou.springsecuritywithjwt.jwt.JwtAuthenticationFilter;
-import com.shoukou.springsecuritywithjwt.jwt.JwtAuthenticationProvider;
+import com.shoukou.springsecuritywithjwt.security.jwt.JwtAuthenticationFilter;
+import com.shoukou.springsecuritywithjwt.security.jwt.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

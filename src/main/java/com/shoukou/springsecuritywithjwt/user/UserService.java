@@ -1,6 +1,6 @@
 package com.shoukou.springsecuritywithjwt.user;
 
-import com.shoukou.springsecuritywithjwt.jwt.JwtPrincipalExtractor;
+import com.shoukou.springsecuritywithjwt.security.jwt.JwtPrincipalExtractor;
 import com.shoukou.springsecuritywithjwt.user.dto.UserDto;
 import com.shoukou.springsecuritywithjwt.user.dto.UserListDto;
 import lombok.RequiredArgsConstructor;

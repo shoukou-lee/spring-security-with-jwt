@@ -1,7 +1,8 @@
 package com.shoukou.springsecuritywithjwt.auth;
 
-import com.shoukou.springsecuritywithjwt.jwt.JwtDto;
-import com.shoukou.springsecuritywithjwt.jwt.JwtIssuer;
+import com.shoukou.springsecuritywithjwt.redis.RedisService;
+import com.shoukou.springsecuritywithjwt.security.jwt.JwtDto;
+import com.shoukou.springsecuritywithjwt.security.jwt.JwtIssuer;
 import com.shoukou.springsecuritywithjwt.user.dto.LoginDto;
 import com.shoukou.springsecuritywithjwt.user.dto.SignUpDto;
 import com.shoukou.springsecuritywithjwt.user.User;
@@ -17,6 +18,7 @@ import org.springframework.web.client.HttpClientErrorException;
 @Transactional(readOnly = true)
 public class AuthService {
 
+    private final RedisService redisService;
     private final UserRepository userRepository;
     private final JwtIssuer jwtIssuer;
 
@@ -26,6 +28,10 @@ public class AuthService {
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "user not found"));
 
         return createJwt(user);
+    }
+
+    public void logout() {
+        // TODO : 레디스 RefreshToken 삭제
     }
 
     @Transactional
@@ -58,12 +64,13 @@ public class AuthService {
         String accessToken = jwtIssuer.createAccessToken(user.getId(), user.getName(), user.getRole().toString());
         String refreshToken = jwtIssuer.createRefreshToken(user.getId(), user.getName(), user.getRole().toString());
 
+        redisService.saveRefreshToken(refreshToken, user.getId());
+
         return JwtDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .grantType("Bearer")
                 .build();
-
     }
 
 }
