@@ -45,25 +45,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        //TODO
-        // Exception을 어디서 처리할지 고민해보자 ..
-        // 상위 메서드로 올린다면 어디에서 처리되는건지 ...
+        // TODO
+        //  Exception을 어디서 처리할지 고민해보자 ..
+        //  상위 메서드로 올린다면 어디에서 처리되는건지 ...
 
         String jwt = parseHeader(request);
 
-        // 로그아웃된 사용자의 토큰인데 요청이 들어오는 경우를 확인
-        if (redisAccessTokenService.exists(jwt)) {
-            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "This token has already been logged out and is no longer valid. ");
-        }
-
         if (jwt != null) {
             try {
-                Authentication jwtAuthenticationToken = new JwtAuthenticationToken(jwt);
-                Authentication authenticate = authenticationManager.authenticate(jwtAuthenticationToken);
+                // 로그아웃된 사용자의 토큰인데 요청이 들어오는 경우를 확인
+                if (redisAccessTokenService.exists(jwt)) {
+                    throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "This token has already been logged out and is no longer valid. ");
+                }
 
-                log.info("JWT 받아와서 SecurityContextHolder에 넣자 ! ");
+                Authentication jwtAuthenticationToken = new JwtAuthenticationToken(jwt); // 일단 인증 안된 토큰 생성
+                Authentication authenticate = authenticationManager.authenticate(jwtAuthenticationToken); // 인증 안된 토큰을 Provider 로 넘겨 인증된 토큰 생성.
                 SecurityContextHolder.getContext().setAuthentication(authenticate);
-
+                log.info("Token has been successfully put into SecurityContext !");
             } catch (AuthenticationException authenticationException) {
                 SecurityContextHolder.clearContext();
             }
@@ -76,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null || !header.startsWith(BEARER)) {
-            log.info("토큰 검증 실패");
+            log.info("Invalid token. Null or not start with `Bearer ` ");
             return null;
         }
         return header.replace(BEARER, "");

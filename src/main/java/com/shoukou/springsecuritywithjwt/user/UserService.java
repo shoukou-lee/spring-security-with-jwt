@@ -22,6 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserListDto getUserList() {
+
         List<User> all = userRepository.findAllUsers();
 
         List<UserDto> userDtos = all.stream()
@@ -31,15 +32,18 @@ public class UserService {
         return UserListDto.builder()
                 .userDtos(userDtos)
                 .build();
+
     }
 
     public UserDto getMyInfo() {
 
         Long myId = JwtPrivateClaimExtractor.getUserId();
+
         User user = userRepository.findById(myId)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "No user found"));
 
         return new UserDto(user);
+
     }
 
     @Transactional
@@ -53,11 +57,11 @@ public class UserService {
         User targetUser = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "No user found"));
 
-        // requester.role > targetUser.role 일때만 허용
+        // 자신보다 낮은 ROLE을 가진 사용자만 Ban 가능
         if (requester.getRole().compareTo(targetUser.getRole()) == 1) {
             targetUser.softDelete();
         } else {
-            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "BAN 권한 없음 !");
+            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "No permission to ban user");
         }
 
         return new UserDto(targetUser);

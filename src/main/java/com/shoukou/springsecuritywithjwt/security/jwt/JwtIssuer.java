@@ -18,35 +18,35 @@ public class JwtIssuer {
     private final String USER_NAME = "uname";
     private final String USER_ROLE = "role";
 
-    private final String secretKey;
+    private final String accessKey;
     private final String refreshKey;
-    private final int expirationTimeInMinute;
-    private final int refreshExpirationTimeInMinute;
+    private final int accessTokenExpirationInMinute;
+    private final int refreshTokenExpirationInMinute;
 
-    public JwtIssuer(@Value("${jwt.access.key}") String secretKey,
+    public JwtIssuer(@Value("${jwt.access.key}") String accessKey,
                      @Value("${jwt.refresh.key}") String refreshKey,
-                     @Value("${jwt.access.expiration}") int expirationTimeInMinute,
-                     @Value("${jwt.refresh.expiration}") int refreshExpirationTimeInMinute) {
-        this.secretKey = secretKey;
+                     @Value("${jwt.access.expiration}") int accessTokenExpirationInMinute,
+                     @Value("${jwt.refresh.expiration}") int refreshTokenExpirationInMinute) {
+        this.accessKey = accessKey;
         this.refreshKey = refreshKey;
-        this.expirationTimeInMinute = expirationTimeInMinute;
-        this.refreshExpirationTimeInMinute = refreshExpirationTimeInMinute;
+        this.accessTokenExpirationInMinute = accessTokenExpirationInMinute;
+        this.refreshTokenExpirationInMinute = refreshTokenExpirationInMinute;
     }
 
     public String createAccessToken(Long userId, String username, String authority) {
-        return createToken(userId, username, authority, this.secretKey, this.expirationTimeInMinute);
+        return createToken(userId, username, authority, this.accessKey, this.accessTokenExpirationInMinute);
     }
 
     public String createRefreshToken(Long userId, String username, String authority) {
-        return createToken(userId, username, authority, this.refreshKey, this.refreshExpirationTimeInMinute);
+        return createToken(userId, username, authority, this.refreshKey, this.refreshTokenExpirationInMinute);
     }
 
     private String createToken(Long userId, String username, String authority, String key, int expiration) {
 
         Claims claims = Jwts.claims();
-        claims.put(USER_ID, userId.toString());
-        claims.put(USER_NAME, username); // 원하는 private claims를 put
-        claims.put(USER_ROLE, authority); // 원하는 private claims를 put
+        claims.put(USER_ID, userId.toString()); // 원하는 private claims를 골라 put
+        claims.put(USER_NAME, username);
+        claims.put(USER_ROLE, authority);
 
         Date now = new Date();
         Date expiredAt = new Date(now.getTime() + minuteToMillisecond(expiration));

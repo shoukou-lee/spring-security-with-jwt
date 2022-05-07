@@ -5,11 +5,13 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,7 +41,9 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         // 받아온 JWT가 유효한지 검증하는 로직 구현
         // 검증 중 Exception이 발생하면 상위로 Throw 한다.
-        // ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException
+
+        // TODO : Exception 처리
+        //  ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException
 
         log.info("secret:{}", secretKey);
 
@@ -56,26 +60,27 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         Collection<? extends GrantedAuthority> grantedAuthorities = createGrantedAuthority(claims);
 
-        log.info("인증된 토큰 발급 !");
+        log.info("An authenticated token has been issued !");
+        log.info("private claims : {}, {}", userId, username);
         return new JwtAuthenticationToken(token.getJwt(), grantedAuthorities, subject, credentials, issuer, userId, username);
     }
 
+    // JwtAuthenticationToken 클래스가 authentication 을 상속하는지 검사
     @Override
     public boolean supports(Class<?> authentication) {
-        // JwtAuthenticationToken 클래스가 authentication 인자 타입을 지원한다면 true, 그렇지 않다면 false를 리턴
         return JwtAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
-    public Long getUserIdFromClaim(String jwt) {
+    public Long getUserIdFromExpiredToken(String jwt) {
         try {
             Claims claims = parseJwt(jwt);
         } catch (ExpiredJwtException e) {
-            log.info("만료된 토큰에서 get id");
             String id = e.getClaims().get("id", String.class);
+            log.info("Extracted ID from expired token is {}", id);
             return Long.valueOf(id);
         }
-        log.info("만료 안된 토큰 ㅠㅠ");
-        return null;
+        log.info("This token has not yet expired");
+        throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
     }
 
     private Claims parseJwt(String jwt) {

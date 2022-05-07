@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtAuthenticationProvider jwtAuthenticationProvider; // AuthenticationProvider의 커스텀 구현체
+    private final JwtAuthenticationProvider jwtAuthenticationProvider; // AuthenticationProvider 의 커스텀 구현체
     private final RedisAccessTokenService redisAccessTokenService;
 
     @Override

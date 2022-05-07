@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
-//TODO : Authentication의 기본 구현체인 AbstractAuthenticationToken을 확장해서 JWT를 만든다
+// Authentication의 기본 구현체인 AbstractAuthenticationToken을 확장해서 JWT를 만든다
 @Getter
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 

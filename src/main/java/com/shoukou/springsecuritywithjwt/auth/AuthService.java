@@ -3,6 +3,8 @@ package com.shoukou.springsecuritywithjwt.auth;
 import com.shoukou.springsecuritywithjwt.redis.RedisAccessTokenService;
 import com.shoukou.springsecuritywithjwt.redis.RedisRefreshTokenService;
 import com.shoukou.springsecuritywithjwt.security.jwt.*;
+import com.shoukou.springsecuritywithjwt.security.jwt.dto.JwtDto;
+import com.shoukou.springsecuritywithjwt.security.jwt.dto.JwtReissueDto;
 import com.shoukou.springsecuritywithjwt.user.User;
 import com.shoukou.springsecuritywithjwt.user.UserRepository;
 import com.shoukou.springsecuritywithjwt.user.dto.LoginDto;
@@ -43,7 +45,7 @@ public class AuthService {
 
         redisAccessTokenService.put(token); // 블랙리스트에 올려두기
 
-        log.info("로그아웃 완료 !");
+        log.info("Successfully logged out !");
     }
 
     /**
@@ -56,7 +58,7 @@ public class AuthService {
      */
     public JwtDto reissue(JwtReissueDto jwtReissueDto) {
 
-        Long userIdInToken = provider.getUserIdFromClaim(jwtReissueDto.getAccessToken());
+        Long userIdInToken = provider.getUserIdFromExpiredToken(jwtReissueDto.getAccessToken());
         String refreshTokenInRedis = redisRefreshTokenService.getRefreshToken(userIdInToken);
 
         if (refreshTokenInRedis.equals(jwtReissueDto.getRefreshToken())) {

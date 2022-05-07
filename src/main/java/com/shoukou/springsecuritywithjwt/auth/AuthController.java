@@ -1,7 +1,7 @@
 package com.shoukou.springsecuritywithjwt.auth;
 
-import com.shoukou.springsecuritywithjwt.security.jwt.JwtDto;
-import com.shoukou.springsecuritywithjwt.security.jwt.JwtReissueDto;
+import com.shoukou.springsecuritywithjwt.security.jwt.dto.JwtDto;
+import com.shoukou.springsecuritywithjwt.security.jwt.dto.JwtReissueDto;
 import com.shoukou.springsecuritywithjwt.user.dto.LoginDto;
 import com.shoukou.springsecuritywithjwt.user.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;

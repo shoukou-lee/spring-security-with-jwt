@@ -22,7 +22,7 @@ public class RedisAccessTokenService {
     public void put(String accessToken) {
         ValueOperations<String, String> valOps = redisTemplate.opsForValue();
         valOps.set(accessToken, "logout", ACC_EXP);
-        log.info("Redis 블랙리스트 등록");
+        log.info("The access token has been put on the Redis blacklist. It will be automatically discarded after {} minutes.", ACC_EXP);
     }
 
     public Boolean exists(String accessToken) {
@@ -35,7 +35,7 @@ public class RedisAccessTokenService {
 
     public void delete(String accessToken) {
         redisTemplate.delete(accessToken);
-        log.info("Redis 블랙리스트 해제");
+        log.info("The access token has been discarded.");
     }
 
     private String get(String accessToken) {
