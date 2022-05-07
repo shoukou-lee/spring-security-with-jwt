@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -30,6 +31,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * 로그인/회원가입 요청은 헤더의 Authorization에 맞는 토큰이 없더라도 Auth-filtered 되지 않아야 함
+     * parseHeader에서 토큰이 없다고 무작정 Exception을 터뜨리지 않고, null을 리턴한 뒤 다음 필터를 타게 하자
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //TODO
@@ -38,14 +43,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwt = parseHeader(request);
 
-        Authentication jwtAuthenticationToken = new JwtAuthenticationToken(jwt);
-        Authentication authenticate = authenticationManager.authenticate(jwtAuthenticationToken);
+        if (jwt != null) {
+            try {
+                Authentication jwtAuthenticationToken = new JwtAuthenticationToken(jwt);
+                Authentication authenticate = authenticationManager.authenticate(jwtAuthenticationToken);
 
-        log.info("JWT 받아와서 SecurityContextHolder에 넣자 ! ");
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
+                log.info("JWT 받아와서 SecurityContextHolder에 넣자 ! ");
+                SecurityContextHolder.getContext().setAuthentication(authenticate);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("authentication = " + authentication.toString());
+            } catch (AuthenticationException authenticationException) {
+                SecurityContextHolder.clearContext();
+            }
+        }
 
         filterChain.doFilter(request, response); // invoke next filter in the filter chain
     }
@@ -54,7 +63,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null || !header.startsWith(BEARER)) {
-            throw new RuntimeException("토큰 검증 실패");
+            log.info("토큰 검증 실패");
+            return null;
         }
         return header.replace(BEARER, "");
     }
