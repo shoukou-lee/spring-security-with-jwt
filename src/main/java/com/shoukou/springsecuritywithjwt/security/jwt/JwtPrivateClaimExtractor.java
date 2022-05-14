@@ -16,12 +16,12 @@ public class JwtPrivateClaimExtractor {
 
     public static Long getUserId() {
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        return Long.valueOf(authentication.getUserId());
+        return Long.valueOf(authentication.getPrincipal().getUserId());
     }
 
     public static String getUsername() {
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getUsername();
+        return authentication.getPrincipal().getUsername();
     }
 
 }

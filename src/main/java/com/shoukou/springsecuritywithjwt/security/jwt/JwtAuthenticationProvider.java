@@ -1,5 +1,6 @@
 package com.shoukou.springsecuritywithjwt.security.jwt;
 
+import com.shoukou.springsecuritywithjwt.security.CustomPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -62,7 +63,10 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         log.info("An authenticated token has been issued !");
         log.info("private claims : {}, {}", userId, username);
-        return new JwtAuthenticationToken(token.getJwt(), grantedAuthorities, subject, credentials, issuer, userId, username);
+
+        CustomPrincipal customPrincipal = CustomPrincipal.create(Long.valueOf(userId), username);
+
+        return new JwtAuthenticationToken(grantedAuthorities, customPrincipal, credentials, issuer);
     }
 
     // JwtAuthenticationToken 클래스가 authentication 을 상속하는지 검사

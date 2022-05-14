@@ -1,5 +1,6 @@
 package com.shoukou.springsecuritywithjwt.security.jwt;
 
+import com.shoukou.springsecuritywithjwt.security.CustomPrincipal;
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,15 +12,11 @@ import java.util.Collection;
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
     private String jwt;
-    private Object principal;
+    private CustomPrincipal principal;
     private Object credentials;
 
     // registered claim
     private String issuer;
-
-    // private claims
-    private String userId;
-    private String username;
 
     // 인증 안된 토큰 발급
     public JwtAuthenticationToken(String jwt) {
@@ -29,25 +26,12 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     // 인증된 토큰 발급
-    public JwtAuthenticationToken(String jwt, Collection<? extends GrantedAuthority> authorities, Object principal, Object credentials, String issuer, String userId, String username) {
+    public JwtAuthenticationToken(Collection<? extends GrantedAuthority> authorities, Object principal, Object credentials, String issuer) {
         super(authorities);
-        this.jwt = jwt;
-        this.principal = principal;
+        this.principal = (CustomPrincipal) principal;
         this.credentials = credentials;
         this.issuer = issuer;
-        this.userId = userId;
-        this.username = username;
         this.setAuthenticated(true);
-    }
-
-    @Override
-    public Object getCredentials() {
-        return this.credentials;
-    }
-
-    @Override
-    public Object getPrincipal() {
-        return this.principal;
     }
 
 }
