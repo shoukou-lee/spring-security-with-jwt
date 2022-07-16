@@ -32,18 +32,15 @@ public class UserService {
         return UserListDto.builder()
                 .userDtos(userDtos)
                 .build();
-
     }
 
     public UserDto getMyInfo() {
 
         Long myId = JwtPrivateClaimExtractor.getUserId();
-
         User user = userRepository.findById(myId)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "No user found"));
 
         return new UserDto(user);
-
     }
 
     @Transactional
