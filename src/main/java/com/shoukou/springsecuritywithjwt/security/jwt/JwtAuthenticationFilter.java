@@ -58,6 +58,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "This token has already been logged out and is no longer valid. ");
                 }
 
+                /**
+                 * AuthenticationManager 기본 구현체는 ProviderManager이고, 적절한 provider를 찾아 authenticate를 위임
+                 */
                 Authentication jwtAuthenticationToken = new JwtAuthenticationToken(jwt); // 일단 인증 안된 토큰 생성
                 Authentication authenticate = authenticationManager.authenticate(jwtAuthenticationToken); // 인증 안된 토큰을 Provider 로 넘겨 인증된 토큰 생성.
                 SecurityContextHolder.getContext().setAuthentication(authenticate);

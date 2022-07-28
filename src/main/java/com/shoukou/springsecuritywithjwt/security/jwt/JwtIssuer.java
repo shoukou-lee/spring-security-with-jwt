@@ -51,7 +51,7 @@ public class JwtIssuer {
         Date now = new Date();
         Date expiredAt = new Date(now.getTime() + minuteToMillisecond(expiration));
 
-        Key secretKey = Keys.hmacShaKeyFor(key.getBytes());
+        Key secretKey = Keys.hmacShaKeyFor(key.getBytes()); // signWith 메서드 매개변수로서 사용하기 위해 byte->ScreteKey 객체로 변환
 
         return Jwts.builder()
                 .setClaims(claims)
