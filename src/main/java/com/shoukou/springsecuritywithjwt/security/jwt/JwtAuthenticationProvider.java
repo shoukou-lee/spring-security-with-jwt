@@ -69,7 +69,9 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         return new JwtAuthenticationToken(grantedAuthorities, customPrincipal, credentials, issuer);
     }
 
-    // JwtAuthenticationToken 클래스가 authentication 을 상속하는지 검사
+    /** JwtAuthenticationToken 클래스가 authentication 을 상속하는지 검사.
+     * ProviderManager.authenticate(Authentication authentication) 구현을 보면 왜 override가 필요한지 알 수 있다.
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return JwtAuthenticationToken.class.isAssignableFrom(authentication);
